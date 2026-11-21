@@ -162,6 +162,12 @@ async def run_understand(conversation_id: str, attempt: int = 1) -> None:
         state = await pool().fetchval(
             "select state from echo.stt_jobs where conversation_id = $1 order by created_at desc limit 1", conversation_id
         )
+        if state is None and not await queue.has_pending(queue.STT_BATCH_SUBMIT, "conversation_id", conversation_id):
+            # The batch request was lost before any job row was written (e.g. it was dead-lettered by an older
+            # build). Ask again: submit is idempotent, and a permanent failure now records a failed job, after
+            # which this conversation is understood from its fast-path transcripts.
+            await queue.send(queue.STT_BATCH_SUBMIT, {"conversation_id": conversation_id, "user_id": uid})
+            return
         if state not in ("completed", "failed"):
             return
 

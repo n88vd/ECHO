@@ -48,6 +48,13 @@ async def set_vt(queue: str, msg_id: int, vt_s: int) -> None:
     await pool().execute("select msg_id from pgmq.set_vt($1::text, $2::bigint, $3::integer)", queue, msg_id, vt_s)
 
 
+async def has_pending(queue: str, key: str, value: str) -> bool:
+    """True if a message with body[key] == value is waiting (visible, delayed or in flight) on the queue."""
+    if queue not in ALL_QUEUES:
+        raise ValueError(queue)
+    return bool(await pool().fetchval(f"select exists(select 1 from pgmq.q_{queue} where message->>$1 = $2)", key, value))
+
+
 async def depth() -> dict[str, int]:
     out = {}
     async with pool().acquire() as conn:
