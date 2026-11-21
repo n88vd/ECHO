@@ -1,10 +1,12 @@
 package ai.echo.app.ui.screens
 
+import ai.echo.app.ui.theme.EchoIcons
 import ai.echo.app.BuildConfig
 import ai.echo.app.EchoApp
 import ai.echo.app.capture.CaptureService
 import ai.echo.app.ui.VoiceRecorder
-import ai.echo.app.ui.components.EchoOrb
+import ai.echo.app.ui.components.ParticleSphere
+import ai.echo.app.ui.components.SphereMode
 import ai.echo.app.ui.components.GlassCard
 import ai.echo.app.ui.components.GradientButton
 import ai.echo.app.ui.theme.EchoColors
@@ -29,9 +31,6 @@ import androidx.compose.foundation.layout.statusBarsPadding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.verticalScroll
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.outlined.CheckCircle
-import androidx.compose.material.icons.outlined.RadioButtonUnchecked
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
@@ -78,7 +77,7 @@ fun SignInScreen(app: EchoApp) {
         Spacer(Modifier.height(48.dp))
         Text("ECHO", style = MaterialTheme.typography.headlineSmall, modifier = Modifier.clickable { showEmail = !showEmail })
         Spacer(Modifier.height(36.dp))
-        EchoOrb(220.dp)
+        ParticleSphere(220.dp)
         Spacer(Modifier.height(36.dp))
         Text("Your external memory", style = MaterialTheme.typography.displaySmall, textAlign = TextAlign.Center)
         Spacer(Modifier.height(12.dp))
@@ -163,7 +162,7 @@ fun OnboardingScreen(app: EchoApp, onDone: () -> Unit) {
         horizontalAlignment = Alignment.CenterHorizontally,
     ) {
         Spacer(Modifier.height(24.dp))
-        EchoOrb(150.dp, level = level, active = true)
+        ParticleSphere(150.dp, level = level, mode = SphereMode.Listening)
         Spacer(Modifier.height(24.dp))
         if (step == 0) {
             Text("Activate ECHO", style = MaterialTheme.typography.displaySmall)
@@ -226,7 +225,7 @@ fun OnboardingScreen(app: EchoApp, onDone: () -> Unit) {
 @Composable
 private fun PermRow(title: String, sub: String, ok: Boolean) {
     Row(Modifier.fillMaxWidth().padding(vertical = 8.dp), verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(12.dp)) {
-        Icon(if (ok) Icons.Outlined.CheckCircle else Icons.Outlined.RadioButtonUnchecked, null, tint = if (ok) EchoColors.Mint else EchoColors.Faint, modifier = Modifier.size(22.dp))
+        Icon(if (ok) EchoIcons.CheckCircle else EchoIcons.Unchecked, null, tint = if (ok) EchoColors.Mint else EchoColors.Faint, modifier = Modifier.size(22.dp))
         Column {
             Text(title, style = MaterialTheme.typography.titleMedium, fontSize = 15.sp)
             Text(sub, style = MaterialTheme.typography.labelMedium)

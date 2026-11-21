@@ -1,0 +1,11 @@
+<resources>
+    <!-- Android 12+ system splash: the dot-sphere logo on the app background, sized so it hands off
+         seamlessly to the animated SplashScreen composable (same centre, same sphere diameter). -->
+    <style name="Theme.Echo" parent="android:Theme.Material.Light.NoActionBar">
+        <item name="android:statusBarColor">@android:color/transparent</item>
+        <item name="android:navigationBarColor">@android:color/transparent</item>
+        <item name="android:windowBackground">@color/echo_bg</item>
+        <item name="android:windowSplashScreenBackground">@color/echo_bg</item>
+        <item name="android:windowSplashScreenAnimatedIcon">@drawable/ic_launcher_foreground</item>
+    </style>
+</resources>

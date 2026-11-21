@@ -1,5 +1,6 @@
 package ai.echo.app.ui.screens
 
+import ai.echo.app.ui.theme.EchoIcons
 import ai.echo.app.EchoApp
 import ai.echo.app.data.ConversationDetail
 import ai.echo.app.data.MemoryDetail
@@ -33,14 +34,6 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.automirrored.outlined.ArrowBack
-import androidx.compose.material.icons.outlined.CheckCircle
-import androidx.compose.material.icons.outlined.Delete
-import androidx.compose.material.icons.outlined.PlayArrow
-import androidx.compose.material.icons.outlined.PushPin
-import androidx.compose.material.icons.outlined.Stop
-import androidx.compose.material.icons.outlined.Translate
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Icon
@@ -68,7 +61,7 @@ import kotlinx.coroutines.launch
 @Composable
 private fun TopBar(title: String, onBack: () -> Unit, actions: @Composable () -> Unit = {}) {
     Row(Modifier.fillMaxWidth().statusBarsPadding().padding(horizontal = 8.dp, vertical = 4.dp), verticalAlignment = Alignment.CenterVertically) {
-        IconButton(onClick = onBack) { Icon(Icons.AutoMirrored.Outlined.ArrowBack, "Back") }
+        IconButton(onClick = onBack) { Icon(EchoIcons.Back, "Back") }
         Text(title, style = MaterialTheme.typography.titleMedium, modifier = Modifier.weight(1f))
         actions()
     }
@@ -90,9 +83,9 @@ fun MemoryDetailScreen(app: EchoApp, id: String, onBack: () -> Unit, onConversat
         TopBar("Memory", onBack) {
             m?.let { mem ->
                 IconButton(onClick = { scope.launch { runCatching { app.api.pinMemory(id, !mem.pinned) }; reload++ } }) {
-                    Icon(Icons.Outlined.PushPin, "Pin", tint = if (mem.pinned) EchoColors.Violet else EchoColors.Faint)
+                    Icon(EchoIcons.Pin, "Pin", tint = if (mem.pinned) EchoColors.Violet else EchoColors.Faint)
                 }
-                IconButton(onClick = { confirmDelete = true }) { Icon(Icons.Outlined.Delete, "Delete", tint = EchoColors.Muted) }
+                IconButton(onClick = { confirmDelete = true }) { Icon(EchoIcons.Delete, "Delete", tint = EchoColors.Muted) }
             }
         }
         val mem = m
@@ -123,7 +116,7 @@ fun MemoryDetailScreen(app: EchoApp, id: String, onBack: () -> Unit, onConversat
                     Text(c.action, style = MaterialTheme.typography.bodyLarge)
                     c.due_at?.let { Text("Due ${fullOf(it)}", style = MaterialTheme.typography.labelMedium) }
                     Spacer(Modifier.height(8.dp))
-                    if (c.status == "open") Pill("Mark as done", icon = Icons.Outlined.CheckCircle) {
+                    if (c.status == "open") Pill("Mark as done", icon = EchoIcons.CheckCircle) {
                         scope.launch { runCatching { app.api.setCommitment(id, "done") }; reload++ }
                     } else Text("Status: ${c.status}", color = EchoColors.Mint)
                 }
@@ -136,7 +129,7 @@ fun MemoryDetailScreen(app: EchoApp, id: String, onBack: () -> Unit, onConversat
                         Text(timeOf(e.spoken_at), style = MaterialTheme.typography.labelMedium)
                         e.audio_url?.let { url ->
                             IconButton(onClick = { if (playing == e.utterance_id) Player.stop() else Player.play(url, e.utterance_id, e.start_ms ?: 0) }) {
-                                Icon(if (playing == e.utterance_id) Icons.Outlined.Stop else Icons.Outlined.PlayArrow, "Play")
+                                Icon(if (playing == e.utterance_id) EchoIcons.Stop else EchoIcons.Play, "Play")
                             }
                         }
                     }
@@ -210,8 +203,8 @@ fun ConversationScreen(app: EchoApp, id: String, onBack: () -> Unit, onMemory: (
 
     Column(Modifier.fillMaxSize()) {
         TopBar(c?.title ?: "Conversation", onBack) {
-            IconButton(onClick = { english = !english }) { Icon(Icons.Outlined.Translate, "Translate", tint = if (english) EchoColors.Violet else EchoColors.Muted) }
-            IconButton(onClick = { confirmDelete = true }) { Icon(Icons.Outlined.Delete, "Delete", tint = EchoColors.Muted) }
+            IconButton(onClick = { english = !english }) { Icon(EchoIcons.Translate, "Translate", tint = if (english) EchoColors.Violet else EchoColors.Muted) }
+            IconButton(onClick = { confirmDelete = true }) { Icon(EchoIcons.Delete, "Delete", tint = EchoColors.Muted) }
         }
         val conv = c ?: run { Box(Modifier.fillMaxSize(), contentAlignment = Alignment.Center) { CircularProgressIndicator() }; return@Column }
         Column(Modifier.verticalScroll(rememberScrollState()).padding(20.dp)) {

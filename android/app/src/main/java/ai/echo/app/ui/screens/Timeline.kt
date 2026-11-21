@@ -1,5 +1,6 @@
 package ai.echo.app.ui.screens
 
+import ai.echo.app.ui.theme.EchoIcons
 import ai.echo.app.EchoApp
 import ai.echo.app.data.TimelineItem
 import ai.echo.app.ui.components.EmptyHint
@@ -26,11 +27,6 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.CircleShape
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.outlined.DirectionsCar
-import androidx.compose.material.icons.outlined.Place
-import androidx.compose.material.icons.outlined.PushPin
-import androidx.compose.material.icons.outlined.Search
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
@@ -38,6 +34,7 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
 import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.runtime.Composable
+import androidx.compose.foundation.layout.Box
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -76,11 +73,16 @@ fun TimelineScreen(app: EchoApp, onConversation: (String) -> Unit, onMemory: (St
             Spacer(Modifier.height(12.dp))
             TextField(
                 query, { query = it }, Modifier.fillMaxWidth().clip(CircleShape).border(1.dp, EchoColors.Stroke, CircleShape),
-                placeholder = { Text("Search conversations") }, leadingIcon = { Icon(Icons.Outlined.Search, null) }, singleLine = true,
+                placeholder = { Text("Search conversations") }, leadingIcon = { Icon(EchoIcons.Search, null) }, singleLine = true,
                 colors = TextFieldDefaults.colors(focusedContainerColor = Color.White, unfocusedContainerColor = Color.White, focusedIndicatorColor = Color.Transparent, unfocusedIndicatorColor = Color.Transparent),
             )
         }
-        if (loading && items.isEmpty()) item { CircularProgressIndicator(Modifier.padding(24.dp)) }
+        if (loading && items.isEmpty()) item {
+            // Centre in the space left under the header rather than hugging the left edge.
+            Box(Modifier.fillParentMaxWidth().fillParentMaxHeight(0.7f), contentAlignment = Alignment.Center) {
+                CircularProgressIndicator(color = EchoColors.Violet)
+            }
+        }
         error?.let { item { Text(it, color = EchoColors.Coral) } }
         if (!loading && items.isEmpty() && error == null) item { EmptyHint("Nothing yet. Conversations appear here a few minutes after they end.") }
         var lastDay = ""
@@ -109,11 +111,11 @@ private fun ConversationCard(c: TimelineItem, onOpen: () -> Unit, onMemory: (Str
             Text(timeOf(c.started_at), style = MaterialTheme.typography.labelMedium)
             if (c.place != null || c.in_transit) {
                 Spacer(Modifier.width(10.dp))
-                Icon(if (c.in_transit) Icons.Outlined.DirectionsCar else Icons.Outlined.Place, null, Modifier.size(14.dp), tint = EchoColors.Muted)
+                Icon(if (c.in_transit) EchoIcons.Car else EchoIcons.Place, null, Modifier.size(14.dp), tint = EchoColors.Muted)
                 Text(if (c.in_transit) "On the move" else c.place!!, style = MaterialTheme.typography.labelMedium, maxLines = 1)
             }
             Spacer(Modifier.weight(1f))
-            if (c.pinned) Icon(Icons.Outlined.PushPin, "Pinned", Modifier.size(16.dp), tint = EchoColors.Violet)
+            if (c.pinned) Icon(EchoIcons.Pin, "Pinned", Modifier.size(16.dp), tint = EchoColors.Violet)
             if (c.languages.isNotEmpty()) Text(c.languages.joinToString(" ") { it.substringBefore('-').uppercase() }, style = MaterialTheme.typography.labelMedium, modifier = Modifier.padding(start = 6.dp))
         }
         Spacer(Modifier.height(6.dp))

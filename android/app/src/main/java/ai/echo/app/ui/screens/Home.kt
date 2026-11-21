@@ -1,5 +1,6 @@
 package ai.echo.app.ui.screens
 
+import ai.echo.app.ui.theme.EchoIcons
 import ai.echo.app.EchoApp
 import ai.echo.app.capture.CaptureService
 import ai.echo.app.capture.CaptureStatus
@@ -8,7 +9,8 @@ import ai.echo.app.data.Commitment
 import ai.echo.app.data.Digest
 import ai.echo.app.data.Person
 import ai.echo.app.data.Status
-import ai.echo.app.ui.components.EchoOrb
+import ai.echo.app.ui.components.ParticleSphere
+import ai.echo.app.ui.components.SphereMode
 import ai.echo.app.ui.components.EmptyHint
 import ai.echo.app.ui.components.GlassCard
 import ai.echo.app.ui.components.MemoryRow
@@ -39,11 +41,6 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.verticalScroll
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.outlined.BookmarkAdd
-import androidx.compose.material.icons.outlined.CheckCircle
-import androidx.compose.material.icons.outlined.Mic
-import androidx.compose.material.icons.outlined.VisibilityOff
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
@@ -112,7 +109,7 @@ fun HomeScreen(app: EchoApp, onAsk: () -> Unit, onMemory: (String) -> Unit, onTi
 
         GlassCard(Modifier.fillMaxWidth()) {
             Row(verticalAlignment = Alignment.CenterVertically) {
-                EchoOrb(96.dp, level = capture.level, active = enabled && !private && capture.status in setOf(CaptureStatus.Listening, CaptureStatus.Speech))
+                ParticleSphere(96.dp, level = capture.level, mode = if (enabled && !private && capture.status in setOf(CaptureStatus.Listening, CaptureStatus.Speech)) SphereMode.Listening else SphereMode.Idle)
                 Spacer(Modifier.width(16.dp))
                 Column(Modifier.weight(1f)) {
                     Text(label, style = MaterialTheme.typography.titleMedium)
@@ -130,11 +127,11 @@ fun HomeScreen(app: EchoApp, onAsk: () -> Unit, onMemory: (String) -> Unit, onTi
             }
             Spacer(Modifier.height(12.dp))
             Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
-                Pill("Remember this", icon = Icons.Outlined.BookmarkAdd) {
+                Pill("Remember this", icon = EchoIcons.Bookmark) {
                     RememberAction.trigger(context)
                     Toast.makeText(context, "ECHO will remember this moment", Toast.LENGTH_SHORT).show()
                 }
-                Pill(if (private) "Resume" else "Private", selected = private, icon = Icons.Outlined.VisibilityOff) {
+                Pill(if (private) "Resume" else "Private", selected = private, icon = EchoIcons.Hide) {
                     app.prefs.privateModeValue = !private
                     CaptureService.refresh(context)
                 }
@@ -148,7 +145,7 @@ fun HomeScreen(app: EchoApp, onAsk: () -> Unit, onMemory: (String) -> Unit, onTi
         ) {
             Text("Ask ECHO anything…", color = EchoColors.Faint, modifier = Modifier.weight(1f))
             Box(Modifier.size(44.dp).clip(CircleShape).background(EchoColors.accent), contentAlignment = Alignment.Center) {
-                Icon(Icons.Outlined.Mic, null, tint = EchoColors.Ink)
+                Icon(EchoIcons.Mic, null, tint = EchoColors.Ink)
             }
         }
         Spacer(Modifier.height(10.dp))
@@ -174,7 +171,7 @@ fun HomeScreen(app: EchoApp, onAsk: () -> Unit, onMemory: (String) -> Unit, onTi
                     }
                     IconButton(onClick = {
                         scope.launch { runCatching { app.api.setCommitment(c.memory_id, "done") }; refreshKey++ }
-                    }) { Icon(Icons.Outlined.CheckCircle, "Mark done", tint = EchoColors.Mint) }
+                    }) { Icon(EchoIcons.CheckCircle, "Mark done", tint = EchoColors.Mint) }
                 }
             }
         }
