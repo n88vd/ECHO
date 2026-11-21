@@ -1,0 +1,40 @@
+name: echo
+
+x-common: &common
+  build: .
+  image: echo-backend:${ECHO_TAG:-latest}
+  env_file: .env
+  environment:
+    ENV: prod
+    PROVIDERS: live
+  restart: unless-stopped
+  logging:
+    driver: json-file
+    options: { max-size: "20m", max-file: "5" }
+
+services:
+  api:
+    <<: *common
+    ports:
+      - "127.0.0.1:8070:8000"
+    environment:
+      ENV: prod
+      PROVIDERS: live
+      DB_POOL_MAX: "4"
+    healthcheck:
+      test: ["CMD", "curl", "-fsS", "http://localhost:8000/healthz"]
+      interval: 30s
+      timeout: 5s
+      retries: 3
+    mem_limit: 600m
+
+  worker:
+    <<: *common
+    command: ["python", "-m", "app.workers.runtime"]
+    environment:
+      ENV: prod
+      PROVIDERS: live
+      DB_POOL_MAX: "5"
+      WORKER_CONCURRENCY: "2"
+    mem_limit: 900m
+    cpus: 1.5

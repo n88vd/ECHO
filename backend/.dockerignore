@@ -1,0 +1,10 @@
+.venv
+.env
+.env.*
+.ruff_cache
+.pytest_cache
+__pycache__
+models
+tests
+scripts/make_fixtures.py
+*.log

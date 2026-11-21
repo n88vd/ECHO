@@ -1,0 +1,8 @@
+-keepattributes *Annotation*, InnerClasses, Signature
+-keep,includedescriptorclasses class ai.echo.app.**$$serializer { *; }
+-keepclassmembers class ai.echo.app.** { *** Companion; }
+-keepclasseswithmembers class ai.echo.app.** { kotlinx.serialization.KSerializer serializer(...); }
+-keep class ai.onnxruntime.** { *; }
+-dontwarn org.slf4j.**
+-if class androidx.credentials.CredentialManager
+-keep class androidx.credentials.playservices.** { *; }

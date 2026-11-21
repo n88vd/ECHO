@@ -1,0 +1,22 @@
+{
+  "en_promise": {
+    "language": "en-IN",
+    "text": "Rahul, I promise I will send you the project report by Friday evening.",
+    "seconds": 4.67
+  },
+  "hi_passport": {
+    "language": "hi-IN",
+    "text": "मैंने अपना पासपोर्ट बेडरूम की अलमारी में नीले बैग में रखा है।",
+    "seconds": 6.21
+  },
+  "ta_doctor": {
+    "language": "ta-IN",
+    "text": "நாளை காலை பத்து மணிக்கு நான் டாக்டரை பார்க்க வேண்டும்.",
+    "seconds": 5.27
+  },
+  "hinglish_remember": {
+    "language": "hi-IN",
+    "text": "Echo, yaad rakhna, maine Priya ko bola hai ki main Sunday ko uski party mein zaroor aaunga.",
+    "seconds": 7.15
+  }
+}
